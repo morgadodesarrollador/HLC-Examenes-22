@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  base:
+    container_name: apiMJMGnest
+    image: apiMJMGnest
+    build: 
+      context: ${DIR_DFILES}/ubuntu/base
+      dockerfile: ./Ub_MJMG_postgres.dockerfile
+    env_file: 
+      - ./.env
+    networks: 
+      netansible:
+          ipv4_address: 172.130.10.2
+networks: 
+  netansible:
+      ipam: 
+          driver: default
+          config: 
+              - subnet: 172.130.10.0/24
