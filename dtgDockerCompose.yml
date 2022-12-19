@@ -1,0 +1,58 @@
+version: "3"
+services:
+  db:
+    image: postgres
+    container_name: dtgExamenHlc_bd
+    env_file:
+      - .env
+    networks: 
+      dtgred:
+          ipv4_address: 172.150.10.3
+    environment:
+      POSTGRES_USER: ${USUARIO_DB}
+      POSTGRES_PASSWORD: ${PASSWD_DB}
+      POSTGRES_DB: ${DB}
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "5432:${DB_PORT}"
+    volumes:
+      - db-datos:/var/lib/postgresql/data
+  base:
+    container_name: dtgExamenHlc_servidor
+    image: empezarapidtgnest
+    build: 
+      context: .
+      dockerfile: ./dtgDockerfile
+    env_file: 
+      - ./.env
+    networks: 
+      dtgred:
+          ipv4_address: 172.150.10.2
+    depends_on:
+      - db
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: dtgExamenHlc_pgAdmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD{}
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin-datos:/var/lib/pgadmin
+    links:
+      - "db:pgsql-server"
+    depends_on:
+      - base
+volumes:
+  db-datos:
+  pgadmin-datos:
+  apidtgnest:
+networks: 
+  dtgred:
+      ipam: 
+          driver: default
+          config: 
+              - subnet: 172.150.10.0/24 
