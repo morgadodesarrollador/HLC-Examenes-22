@@ -1,0 +1,32 @@
+FROM ub-base
+
+RUN apt-get update -y && apt install -yq --no-install-recommends \
+    ca-certificates \
+    gnupg2 \
+    nginx
+RUN mkdir -p /var/www/html/${PROYECTO}
+
+WORKDIR /root
+COPY ./nginx.conf /etc/nginx/conf.d/nginx.conf
+
+ARG USUARIO
+ARG PASSWD
+ARG TZ
+ARG URL_GIT
+
+ENV USUARIO=${USUARIO}
+ENV PASSWD=${PASSWD}
+ENV TZ=${TZ}
+ENV URL_GIT=${URL_GIT}
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+COPY ./nginx.conf /root
+COPY ./start-apimaspnest.sh /root
+RUN chmod +x /root/start-apimaspnest.sh
+RUN dos2unix /root/start-apimaspnest.sh
+EXPOSE 7070
+COPY ./nodesource.list /etc/apt/sources.list.d/
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+RUN apt-get update && apt-get install -y nodejs
+RUN apt-get update && apt-get install -y nginx
+ENTRYPOINT [ "/root/start-apimaspnest.sh" ]

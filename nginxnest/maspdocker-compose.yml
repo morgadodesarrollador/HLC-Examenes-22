@@ -1,0 +1,50 @@
+version: "3"
+services:
+  nest:
+    container_name: nginx-nest
+    image: apimaspnest
+    build:
+      context: ${DIR_DFILES}/ubuntu/nginxnest/
+      dockerfile: ./maspDockerfile
+      args:
+        - USUARIO=${USUARIO}
+        - PROYECTO=${PROYECTO}
+        - TZ=${TZ}
+        - PASSWD=${PASSWD}
+        - URL_GIT=${URL_GIT}
+    env_file:
+      - ./.env
+    volumes:
+      - ./nest:/var/lib/${PROYECTO}/data
+    ports:
+      - ${WWW_PORT}:3000
+    networks:
+      net-nest:
+        ipv4_address: 172.150.10.3
+
+  psql-db:
+    container_name: postgresql
+    image: postgres:12.1-alpine
+    build:
+      context: ${DIR_DFILES}/ubuntu/nginxnest/
+      dockerfile: ./maspDockerfile
+      args:
+        - POSTGRES_USER=${DB_USER}
+        - POSTGRES_PASSWORD=${DB_PASS}
+        - POSTGRES_DB=${DB_NAME}
+    env_file:
+      - ./.env
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data
+    ports:
+      - ${WWW_PORT}:5432
+    networks:
+      net-nest:
+        ipv4_address: 172.150.10.2
+
+networks:
+  net-nest:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.150.10.0/24
