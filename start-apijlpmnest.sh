@@ -5,6 +5,7 @@ set -e
 bash /root/start.sh
 
 main(){
+    rm -rf /var/www/your_domain/html
     mkdir /var/www/your_domain/html
     cd /var/www/your_domain/html
     git init
@@ -13,8 +14,6 @@ main(){
     
     npm i -g @nestjs/cli
     npm install
-    
-    npm audit fix
     
 
     echo "
@@ -27,7 +26,7 @@ main(){
         PORT=3000
         HOST_API=http://localhost:3000/api
 
-        JWT_SECRET=incidencias" > .env-template
+        JWT_SECRET=incidencias" > .env
 
 
         # yarn start:dev

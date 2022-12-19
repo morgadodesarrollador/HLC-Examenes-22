@@ -3,26 +3,43 @@ services:
   node-nginx-nest:
     container_name: apiNest
     image: ub-base-apinestincidencias
-    build: 
+    build:
       context: ${DIR_DFILES}/ubuntu/nest
       dockerfile: ./Dockerfile
-      args: 
-       - USUARIO=${USUARIO}
-       - TZ=${TZ}
-       - PASSWD=${PASSWD}
-    env_file: 
+      args:
+        - USUARIO=${USUARIO}
+        - TZ=${TZ}
+        - PASSWD=${PASSWD}
+    env_file:
       - ./.env
-    ports: 
+    ports:
       - ${PORT}:3000
-    networks: 
+    networks:
       net-node-nginx-nest:
-          ipv4_address: 172.140.10.3
-networks: 
+        ipv4_address: 172.140.10.3
+
+
+  db:
+    container_name: api
+    image: postgres:14.3
+    restart: always
+    build:
+      context: ${DIR_DFILES}/ubuntu/nest
+      dockerfile: ./Dockerfile
+      args:
+        - USER=${DB_USERNAME}
+        - PASSWORD=${DB_PASSWORD}
+        - DB=${DB_NAME}
+    env_file:
+      - ./.env
+    ports:
+      - ${W_PORT}:5433
+    networks:
+      net-node-nginx-nest:
+        ipv4_address: 172.140.10.4
+networks:
   net-node-nginx-nest:
-      ipam: 
-          driver: default
-          config: 
-              - subnet: 172.140.10.0/24
-
-
-
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.140.10.0/24
