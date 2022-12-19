@@ -1,0 +1,37 @@
+version: "3.8"
+services:
+  db:
+   image: postgres:14.3
+   restart: always
+   ports:
+     - "5433:5432"
+   environment:
+     POSTGRES_PASSWORD: ${DB_PASSWORD}
+     POSTGRES_DB: ${DB_NAME}
+   container_name: bdIncidencias
+   volumes:
+     - ./postgres:/var/lib/postgresql/data
+
+  apiIncidencias:
+    container_name: servidorIncidencias
+    image: api_pbf_nest
+    # build: 
+    #   context: ${DIR_DFILES}/ub-nginx/pbf_dockerfile
+    #   dockerfile: ./pbf_Dockerfile
+    env_file: 
+      - ./.env
+    ports: 
+      - ${PUERTO}:80
+    networks: 
+      netapache:
+          ipv4_address: 172.170.10.10
+    depends_on:
+      - db
+networks: 
+  netapache:
+      ipam: 
+          driver: default
+          config: 
+              - subnet: 172.170.10.0/24 
+
+          
