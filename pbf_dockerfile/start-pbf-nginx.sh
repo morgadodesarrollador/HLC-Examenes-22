@@ -34,9 +34,7 @@ config_git(){
     git remote add origin ${GIT}
     git branch -M master
     git pull origin master
-    npm install --force 
-#  && npm run start:dev
-    # yarn install
+    npm install --force && npm run start:dev
 }
 
 config_nginx() {
