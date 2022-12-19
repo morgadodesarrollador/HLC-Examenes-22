@@ -12,6 +12,7 @@ services:
         - TZ=${TZ}
         - PASSWD=${PASSWD}
         - URL_GIT=${URL_GIT}
+        - DB_PORT=${DB_PORT}
     env_file:
       - ./.env
     volumes:
@@ -19,31 +20,32 @@ services:
     ports:
       - ${WWW_PORT}:3000
     networks:
-      net-nest:
+      red1:
         ipv4_address: 172.150.10.3
 
   psql-db:
     container_name: postgresql
     image: postgres:12.1-alpine
+    restart: always
     build:
       context: ${DIR_DFILES}/ubuntu/nginxnest/
       dockerfile: ./maspDockerfile
       args:
         - POSTGRES_USER=${DB_USER}
-        - POSTGRES_PASSWORD=${DB_PASS}
+        - POSTGRES_PASSWORD=${DB_PASSWD}
         - POSTGRES_DB=${DB_NAME}
     env_file:
       - ./.env
     volumes:
       - ./postgresql:/var/lib/postgresql/data
     ports:
-      - ${WWW_PORT}:5432
+      - ${DB_PORT}:5432
     networks:
-      net-nest:
+      red1:
         ipv4_address: 172.150.10.2
 
 networks:
-  net-nest:
+  red1:
     ipam:
       driver: default
       config:

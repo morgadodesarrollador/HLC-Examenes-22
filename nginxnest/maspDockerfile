@@ -13,18 +13,22 @@ ARG USUARIO
 ARG PASSWD
 ARG TZ
 ARG URL_GIT
+ARG DB_PORT
+ARG PROYECTO
 
 ENV USUARIO=${USUARIO}
 ENV PASSWD=${PASSWD}
 ENV TZ=${TZ}
 ENV URL_GIT=${URL_GIT}
+ENV DB_PORT=${DB_PORT}
+ENV PROYECTO=${PROYECTO}
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY ./nginx.conf /root
 COPY ./start-apimaspnest.sh /root
 RUN chmod +x /root/start-apimaspnest.sh
 RUN dos2unix /root/start-apimaspnest.sh
-EXPOSE 7070
+EXPOSE 7072
 COPY ./nodesource.list /etc/apt/sources.list.d/
 RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
 RUN apt-get update && apt-get install -y nodejs

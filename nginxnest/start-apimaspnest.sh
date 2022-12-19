@@ -3,22 +3,26 @@ set -e
 bash /root/start.sh
 
 config_git(){
+    rm -rf /var/www/html/$PROYECTO
     mkdir /var/www/html/$PROYECTO
     cd /var/www/html/$PROYECTO
     git init
     git remote add origin $URL_GIT
-    git pull origin main
+    git pull origin master
     npm i -g @nestjs/cli
-    npm install --force && npm run start:dev
+    npm install --force 
 
     echo "
-    DB_HOST=172.150.10.2
-    DB_PORT=5435
-    DB_USER=ma
+    PROYECTO=apiLibreria
+    DB_HOST=192.168.16.149
+    DB_PORT=5437
+    DB_USER=miguel
     PORT=3000
     DB_NAME=incidencias
-    DB_PASS=pswIncidencias
+    DB_PASSWD=usuario
     HOST_API=http://localhost:3000/api" > .env
+    sed -i "s/5432/5437/" src/app.module.ts
+    npm run start:dev
 }
 
 
