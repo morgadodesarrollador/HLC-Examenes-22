@@ -1,0 +1,28 @@
+version: "3"
+services:
+  node-nginx-nest:
+    container_name: apiNest
+    image: ub-base-apinestincidencias
+    build: 
+      context: ${DIR_DFILES}/ubuntu/nest
+      dockerfile: ./Dockerfile
+      args: 
+       - USUARIO=${USUARIO}
+       - TZ=${TZ}
+       - PASSWD=${PASSWD}
+    env_file: 
+      - ./.env
+    ports: 
+      - ${PORT}:3000
+    networks: 
+      net-node-nginx-nest:
+          ipv4_address: 172.140.10.3
+networks: 
+  net-node-nginx-nest:
+      ipam: 
+          driver: default
+          config: 
+              - subnet: 172.140.10.0/24
+
+
+
