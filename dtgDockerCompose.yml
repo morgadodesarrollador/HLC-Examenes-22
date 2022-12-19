@@ -9,22 +9,24 @@ services:
       dtgred:
           ipv4_address: 172.150.10.3
     environment:
-      POSTGRES_USER: ${USUARIO_DB}
-      POSTGRES_PASSWORD: ${PASSWD_DB}
-      POSTGRES_DB: ${DB}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWD}
+      POSTGRES_DB: ${DB_NAME}
       PGDATA: /var/lib/postgresql/data
     ports:
       - "5432:${DB_PORT}"
     volumes:
-      - db-datos:/var/lib/postgresql/data
+      - dtgdb-datos:/var/lib/postgresql/data
   base:
     container_name: dtgExamenHlc_servidor
     image: empezarapidtgnest
     build: 
       context: .
       dockerfile: ./dtgDockerfile
+    ports:
+      - "3000:3000"
     env_file: 
-      - ./.env
+      - .env
     networks: 
       dtgred:
           ipv4_address: 172.150.10.2
@@ -41,15 +43,14 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - pgadmin-datos:/var/lib/pgadmin
+      - dtgpgadmin-datos:/var/lib/pgadmin
     links:
       - "db:pgsql-server"
     depends_on:
       - base
 volumes:
-  db-datos:
-  pgadmin-datos:
-  apidtgnest:
+  dtgdb-datos:
+  dtgpgadmin-datos:
 networks: 
   dtgred:
       ipam: 

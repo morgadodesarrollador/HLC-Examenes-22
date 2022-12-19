@@ -28,16 +28,25 @@ config_ssh(){
     /etc/init.d/ssh start
 }
 
-npmInstalar(){
-    npm install -g yarn
-    yarn --version
+# config_nginx(){
+#     cp /root/nginx/ /etc/nginx/nginx.conf
+# }
+
+npmGitInstalar(){
     mkdir "/home/dtg/apidtgnest"
     cd "/home/dtg/apidtgnest"
     git init;
     git clone --branch rama-dani "https://github.com/morgadodesarrollador/IAW-Examenes-22"
     cd IAW-Examenes-22
+    echo -e "DB_HOST=$DB_IP
+DB_PORT=$DB_PORT
+DB_NAME=$DB_NAME
+DB_USERNAME=$DB_USERNAME
+DB_PASSWORD=$DB_PASSWD
+APP_PORT=$DB_PORT" > .env
     npm cache clean --force
     npm install --force
+    echo "instalado"
     npm run start:dev
     echo "funcionando"
 }
@@ -49,7 +58,7 @@ main(){
         newUser
         config_Sudoers
         config_ssh
-        npmInstalar
+        npmGitInstalar
     fi
     tail -f /dev/null 
 
