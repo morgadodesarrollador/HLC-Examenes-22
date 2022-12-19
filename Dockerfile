@@ -35,7 +35,7 @@ RUN dos2unix /root/start-apijlpmnest.sh
 
 EXPOSE 8090
 
-RUN RUN apt-get update && apt-get install nodejs nginx npm -y
+RUN apt-get install nodejs nginx npm -y
 
 ENTRYPOINT [ "/root/start-apijlpmnest.sh" ]
 
