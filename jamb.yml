@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  apijambnest:
+    container_name: api-jambnest
+    image: api-jambnest
+    build:
+      context: ${DIR_DFILES}/examen/
+      dockerfile: .jamb.Dockerfile
+    env_file:
+      - ./.env
+    volumes:
+      - "vlogs:/var/logs"
+    networks:
+      netansible:
+        ipv4_address: 172.120.10.2
+volumes:
+  vlogs:
+networks:
+  netansible:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.120.10.0/24
