@@ -4,8 +4,8 @@ services:
     container_name: api-jambnest
     image: api-jambnest
     build:
-      context: ${DIR_DFILES}/examen/
-      dockerfile: .jamb.Dockerfile
+      context: ./
+      dockerfile: ./jambDockerfile
     env_file:
       - ./.env
     volumes:
