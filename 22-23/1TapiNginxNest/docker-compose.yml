@@ -1,0 +1,54 @@
+version: "3.8"
+services:
+  dbincidenciasnest:
+    container_name: bdlibrerianest
+    image: postgres:14.3
+    restart: always
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    networks: 
+      netapache:
+          ipv4_address: 172.180.10.3
+  
+  weblibrerianest:
+    container_name: apiNest
+    image: ub-base-apinestincidencias
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        - USUARIO=${USUARIO}
+        - PASSWD=${PASSWD}
+        - PROYECTO=${PROYECTO}
+        - DB_HOST=${DB_HOST}
+        - DB_NAME=${DB_NAME}
+        - DB_USERNAME=${DB_USERNAME}
+        - DB_PASSWORD=${DB_PASSWORD}
+        - DB_PORT=${DB_PORT}
+        - URL_Repo_GIT=${URL_Repo_GIT}
+        - NEST_PORT=${NEST_PORT}
+    env_file:
+       - ./.env
+    ports:
+      - ${NEST_PORT}:3000
+    volumes:
+      - ./web:/var/www/html
+      - ./logs:/var/logs
+    networks: 
+      netapache:
+          ipv4_address: 172.180.10.5
+    # depends_on:
+    #   - db
+
+networks: 
+  netapache:
+      ipam: 
+          driver: default
+          config: 
+              - subnet: 172.180.10.0/24 
